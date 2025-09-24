@@ -103,3 +103,5 @@ coverage/
 *.bak
 *.backup
 *.swp
+.env
+*.key
