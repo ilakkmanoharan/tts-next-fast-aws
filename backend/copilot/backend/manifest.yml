@@ -1,0 +1,144 @@
+# The manifest for the "backend" service.
+# Read the full specification for the "Load Balanced Web Service" type at:
+#  https://aws.github.io/copilot-cli/docs/manifest/lb-web-service/
+
+# copilot/backend/manifest.yml
+
+# Name of the service
+name: backend
+
+# Service type: "Load Balanced Web Service" creates an ALB in front
+type: Load Balanced Web Service
+
+# Docker image configuration
+image:
+  # Path to Dockerfile relative to this manifest file
+  build: Dockerfile
+  # Container port FastAPI listens on
+  port: 8000
+
+# CPU and memory settings for the ECS task
+cpu: 256      # adjust as needed
+memory: 512   # adjust as needed
+
+# Number of tasks (replicas) to run
+count: 1
+
+# Networking and load balancer settings
+http:
+  path: "/"
+  healthcheck:
+    path: "/docs"  # FastAPI docs is a simple health endpoint
+    interval: 10s
+    timeout: 5s
+    healthy_threshold: 2
+    unhealthy_threshold: 2
+
+# Environment variables
+variables:
+  ENV: "dev"
+  # Add any other env vars your FastAPI app needs, e.g.,
+  # AWS_REGION: "us-east-1"
+  # DATABASE_URL: "..."
+
+# Optional autoscaling
+autoscaling:
+  min_count: 1
+  max_count: 2
+  target_cpu: 70
+
+
+############################################################################
+
+#name: backend
+#type: Load Balanced Web Service
+
+#cpu: 1024
+#memory: 512
+#port: 8000
+
+#image:
+  #build: ./Dockerfile
+  #port: 8000
+
+#http:
+  #path: '/'
+  #healthcheck:
+    #path: '/health'
+    #healthy_threshold: 2
+    #unhealthy_threshold: 5
+    #interval: 10s
+    #timeout: 5s
+
+#autoscaling:
+  #min_count: 1
+  #max_count: 4
+  #target_cpu: 70
+  #target_memory: 70
+
+#environments:
+  #staging:
+    #variables:
+      #ENV: "staging"
+      #S3_BUCKET: "staging-bucket-name"
+    #count: 1
+    #domain: "staging-api.example.com"
+    #rollback: true
+
+  #production:
+    #variables:
+      #ENV: "production"
+      #S3_BUCKET: "prod-bucket-name"
+    #count: 2
+    #domain: "api.example.com"
+    #rollback: true
+
+#deploy:
+  #rollback: true
+
+#########################################################################################
+
+
+# Your service name will be used in naming your resources like log groups, ECS services, etc.
+#name: backend
+#type: Load Balanced Web Service
+
+# Distribute traffic to your service.
+#http:
+  # Requests to this path will be forwarded to your service.
+  # To match all requests you can use the "/" path.
+#  path: '/'
+  # You can specify a custom health check path. The default is "/".
+  # healthcheck: '/'
+
+# Configuration for your containers and service.
+#image:
+  # Docker build arguments. For additional overrides: https://aws.github.io/copilot-cli/docs/manifest/lb-web-service/#image-build
+  #build: Dockerfile
+  # Port exposed through your container to route traffic to it.
+  #port: 8000
+
+#cpu: 256       # Number of CPU units for the task.
+#memory: 512    # Amount of memory in MiB used by the task.
+#count: 1       # Number of tasks that should be running in your service.
+#exec: true     # Enable running commands in your container.
+#network:
+  #connect: true # Enable Service Connect for intra-environment traffic between services.
+
+# storage:
+  # readonly_fs: true       # Limit to read-only access to mounted root filesystems.
+
+# Optional fields for more advanced use-cases.
+#
+#variables:                    # Pass environment variables as key value pairs.
+#  LOG_LEVEL: info
+
+#secrets:                      # Pass secrets from AWS Systems Manager (SSM) Parameter Store.
+#  GITHUB_TOKEN: GITHUB_TOKEN  # The key is the name of the environment variable, the value is the name of the SSM parameter.
+
+# You can override any of the values defined above by environment.
+#environments:
+#  test:
+#    count: 2               # Number of tasks to run for the "test" environment.
+#    deployment:            # The deployment strategy for the "test" environment.
+#       rolling: 'recreate' # Stops existing tasks before new ones are started for faster deployments.

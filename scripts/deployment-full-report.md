@@ -1,0 +1,6 @@
+|URL|Description|HTTP Status|
+|---|---|---|
+|https://dpy3jeqrdnvsx.cloudfront.net|Frontend Home Page|200|
+|https://dpy3jeqrdnvsx.cloudfront.net|Redirect to HTTPS|200|
+|https://dpy3jeqrdnvsx.cloudfront.net|CloudFront Cache Header|200|
+|http://tts-ne-Publi-j6NoWpqH34EH-112063658.us-east-1.elb.amazonaws.com/health|Backend Health|500|
